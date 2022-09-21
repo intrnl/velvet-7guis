@@ -5,6 +5,7 @@
 	import Timer from './components/Timer.velvet';
 	import Crud from './components/Crud.velvet';
 	import CircleDrawer from './components/CircleDrawer.velvet';
+	import Cells from './components/Cells.velvet';
 </script>
 
 <h3>7GUIs in Velvet</h3>
@@ -16,4 +17,5 @@
 	<Timer />
 	<Crud />
 	<CircleDrawer />
+	<Cells />
 </div>

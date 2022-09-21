@@ -1,15 +1,124 @@
 <script>
+	import { batch } from '@intrnl/velvet';
+	import { Parser, sampleData } from '../lib/cells.js'
 
+	export let shape = [5, 17];
+
+	const columns = Array.from({ length: shape[0] }, (v, i) => String.fromCharCode(i + 'A'.charCodeAt(0)));
+	const rows = Array.from({ length: shape[1] }, (v, i) => i);
+
+	let data = sampleData;
+	let focused = null;
+
+	const instance = new Parser(data, columns, rows);
+	$: instance.updateCells(data);
+
+	function handleCellClick (key) {
+		if (focused !== key) {
+			focused = key;
+
+			setTimeout(() => {
+				const input = $$root.getElementById(`input-${key}`);
+
+				input.focus();
+				input.setSelectionRange(0, input.value.length);
+			}, 0);
+		}
+	}
+
+	function handleCellBlur (ev, key) {
+		if (focused === key) {
+			batch(() => {
+				const next = { ...data, [key]: ev.target.value };
+
+				data = next;
+				focused = null;
+			});
+		}
+	}
+
+	function handleCellKeydown (ev) {
+		if (ev.key === 'Enter') {
+			ev.target.blur();
+		}
+	}
 </script>
 
-<div class='window' style='width: 137px'>
+<div class='window'>
 	<div class='window-title'>
 		<span>Cells</span>
 	</div>
 	<div class='window-content'>
+		<table class='x-table'>
+			<thead>
+				<tr>
+					<th class='row-key' style='width: 30px;'></th>
+
+					{#each columns as column}
+						<th class='column-key'>{column}</th>
+					{/each}
+				</tr>
+			</thead>
+			<tbody>
+				{#each rows as row}
+					<tr id={`row-${row}`}>
+						<th class='row-key'>{row}</th>
+
+						{#each columns as column}
+							{@let key = `${column}${row}`}
+
+							<td id={`cell-${key}`} @click={() => handleCellClick(key)}>
+								{#if focused === key}
+									<input
+										id={`input-${key}`}
+										value={key in data ? data[key] : ''}
+										@blur={(ev) => handleCellBlur(ev, key)}
+										@keydown={handleCellKeydown}
+									/>
+								{:else}
+									<span>
+										{key in data ? instance.parse(data[key]) : ''}
+									</span>
+								{/if}
+							</td>
+						{/each}
+					</tr>
+				{/each}
+			</tbody>
+		</table>
 	</div>
 </div>
 
 <style>
 	@import './base.module.css';
+
+	.x-table {
+		width: -moz-available;
+		width: -webkit-fill-available;
+		width: fill-available;
+		table-layout: fixed;
+		background-color: #ffffff;
+		border-collapse: collapse;
+	}
+	.x-table :is(th, td) {
+		border: 1px solid rgb(187 187 187);
+		padding: 2px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding: 2px 4px;
+	}
+	.x-table th {
+		background-color: rgb(246 246 246);
+	}
+	.x-table td:focus-within {
+		outline: 2px solid rgb(85 163 242);
+	}
+
+	.x-table input {
+		padding: 2px 4px;
+		margin: -2px -4px;
+		border: 0;
+		border-radius: 0;
+		outline: none;
+	}
 </style>
