@@ -9,7 +9,6 @@ export let config = {
 	entryPoints: ['src/main.js'],
 	entryNames: 'app',
 	outdir: 'dist/_assets',
-	publicPath: '/_assets/',
 
 	sourcemap: true,
 
