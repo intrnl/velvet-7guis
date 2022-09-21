@@ -121,8 +121,8 @@
 	.x-table {
 		width: -webkit-fill-available;
 		width: fill-available;
-		border-spacing: 8px 8px;
-		margin: -8px -8px;
+		border-spacing: 2px 8px;
+		margin: -8px -2px;
 	}
 
 	.x-table th {
