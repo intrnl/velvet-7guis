@@ -1,0 +1,76 @@
+<script>
+	import { onDestroy } from '@intrnl/velvet';
+
+	function clamp (num, min, max) {
+		return num <= min ? min : num >= max ? max : num;
+	}
+
+	const MAX = 30000;
+
+	let start = Date.now();
+	let max = MAX / 2;
+
+	let now = start;
+	let interval;
+
+	$: elapsed = clamp(now - start, 0, max);
+
+	$: {
+		if (now - start < max) {
+			interval = setTimeout(() => now = Date.now(), 100)
+		}
+		else {
+			clearTimeout(interval);
+		}
+	}
+
+	onDestroy(() => clearTimeout(interval));
+
+	function reset () {
+		start = Date.now();
+	}
+</script>
+
+<div class='window' style='width: 292px;'>
+	<div class='window-title'>
+		<span>Timer</span>
+	</div>
+	<div class='window-content'>
+		<table class='x-table'>
+			<tr>
+				<th>Elapsed time:</th>
+				<td><progress max={max} value={elapsed} /></td>
+				<td>{(elapsed / 1000).toFixed(1)}</td>
+			</tr>
+			<tr>
+				<th>Duration:</th>
+				<td colspan='2'><input type='range' min={1} max={MAX} :value={max} /></td>
+			</tr>
+		</table>
+
+		<button @click={reset} class='button'>
+			Reset timer
+		</button>
+	</div>
+</div>
+
+<style>
+	@import './base.module.css';
+
+	.x-table {
+		width: -webkit-fill-available;
+		width: fill-available;
+		border-spacing: 8px 0;
+		margin: 0 -8px 8px;
+	}
+
+	.x-table th {
+		font: inherit;
+		text-align: left;
+	}
+
+	input[type='range'] {
+		width: 100%;
+		margin: 0;
+	}
+</style>

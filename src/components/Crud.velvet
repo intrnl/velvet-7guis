@@ -1,0 +1,137 @@
+<script>
+	import { batch } from '@intrnl/velvet';
+
+	let query = '';
+
+	let name = '';
+	let surname = '';
+
+	let array = [
+		{ id: crypto.randomUUID(), value: 'Emil, Hans' },
+		{ id: crypto.randomUUID(), value: 'Mustermann, Max' },
+		{ id: crypto.randomUUID(), value: 'Tisch, Roman' },
+	];
+
+	let selected = null;
+
+	$: valid = name.trim() && surname.trim();
+	$: filtered = array.filter((item) => item.value.toLowerCase().includes(query.toLowerCase()));
+
+	function handleAdd () {
+		batch(() => {
+			const id = crypto.randomUUID();
+
+			array = array.concat({ id, value: `${surname}, ${name}` });
+
+			name = '';
+			surname = '';
+
+			// we can only select right after the option element has been created
+			setTimeout(() => (selected = id), 0);
+		});
+	}
+
+	function handleUpdate () {
+		batch(() => {
+			const next = array.slice();
+			const index = array.findIndex((item) => item.id === selected);
+
+			if (index !== -1) {
+				next[index] = { ...next[index], value: `${surname}, ${surname}` };
+				array = next;
+			}
+
+			name = '';
+			surname = '';
+			selected = null;
+		});
+	}
+
+	function handleDelete () {
+		batch(() => {
+			array = array.filter((item) => item.id !== selected);
+			selected = null;
+		})
+	}
+</script>
+
+<div class='window'>
+	<div class='window-title'>
+		<span>CRUD</span>
+	</div>
+	<div class='window-content'>
+		<div>
+			<label>
+				Search:
+				<input :value={query} class='textfield' />
+			</label>
+		</div>
+		<div class='x-layout'>
+			<select :value={selected} size='5' class='x-select'>
+				{#each filtered as item}
+					<option value={item.id}>{item.value}</option>
+				{/each}
+			</select>
+			<table class='x-table'>
+				<tr>
+					<th>Name:</th>
+					<td><input :value={name} class='textfield' /></td>
+				</tr>
+				<tr>
+					<th>Surname:</th>
+					<td><input :value={surname} class='textfield' /></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<button @click={handleAdd} ?disabled={!valid} class='button'>
+				Add
+			</button>
+			<button @click={handleUpdate} ?disabled={!valid || !selected} class='button'>
+				Update
+			</button>
+			<button @click={handleDelete} ?disabled={!selected} class='button'>
+				Delete
+			</button>
+		</div>
+	</div>
+</div>
+
+<style>
+	@import './base.module.css';
+
+	.x-select {
+		background: #ffffff;
+		box-shadow: rgb(0 0 0 / 20%) 0px 0px 1px;
+		border: 1px solid rgb(156 156 156);
+		border-radius: 3px;
+	}
+	.x-select option {
+		padding: 4px 8px;
+	}
+
+	.x-layout {
+		display: grid;
+		grid-template-columns: 180px minmax(0, 1fr);
+		align-items: start;
+		gap: 8px;
+		margin: 8px 0;
+	}
+
+	.x-table {
+		width: -webkit-fill-available;
+		width: fill-available;
+		border-spacing: 8px 8px;
+		margin: -8px -8px;
+	}
+
+	.x-table th {
+		font: inherit;
+		text-align: left;
+	}
+
+	.x-table .textfield {
+		width: -webkit-fill-available;
+		width: fill-available;
+	}
+</style>

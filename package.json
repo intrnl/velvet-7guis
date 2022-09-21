@@ -9,7 +9,8 @@
 		"build": "NODE_ENV=production node ./scripts/build.js"
 	},
 	"dependencies": {
-		"@intrnl/velvet": "^0.4.11"
+		"@intrnl/velvet": "^0.4.11",
+		"date-fns": "^2.29.3"
 	},
 	"devDependencies": {
 		"@intrnl/esbuild-plugin-velvet": "^0.5.3",

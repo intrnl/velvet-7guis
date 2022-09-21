@@ -1,0 +1,158 @@
+<script>
+	import { batch } from '@intrnl/velvet';
+
+	const BASE_RADIUS = 30;
+	const MAX_RADIUS = 100;
+
+	let snapshots = [[]];
+	let step = 0;
+
+	let resizing = null;
+
+	$: snap = snapshots[step];
+
+	function undo () {
+		resizing = null;
+		step = Math.max(step - 1, 0);
+	}
+
+	function redo () {
+		resizing = null;
+		step = Math.min(step + 1, snapshots.length - 1);
+	}
+
+	function handleCanvasClick (ev) {
+		if (ev.target !== ev.currentTarget) {
+			return;
+		}
+
+		if (resizing) {
+			resizing = null;
+			return;
+		}
+
+		const x = ev.layerX;
+		const y = ev.layerY;
+
+		const next = snap.concat({ x, y, r: BASE_RADIUS });
+		addSnapshot(next);
+	}
+
+	function handleCircleContextMenu (ev, node) {
+		ev.preventDefault();
+		resizing = node;
+	}
+
+	function handleResizeChange (ev) {
+		if (!resizing) {
+			return;
+		}
+
+		const index = snap.findIndex((item) => item === resizing);
+
+		if (index !== -1) {
+			batch(() => {
+				const next = { ...resizing, r: ev.target.valueAsNumber };
+				const array = snap.slice();
+
+				resizing = array[index] = next;
+				addSnapshot(array);
+			});
+		}
+	}
+
+	function handleResizeDone () {
+		resizing = null;
+	}
+
+	function addSnapshot (snap) {
+		const next = snapshots.slice(0, step + 1);
+		next.push(snap);
+
+		batch(() => {
+			snapshots = next;
+			step++;
+		});
+	}
+</script>
+
+<div class='window' style='width: 418px'>
+	<div class='window-title'>
+		<span>Circle Drawer</span>
+	</div>
+	<div class='window-content'>
+		<div>
+			<button @click={undo} ?disabled={step < 1} class='button'>
+				Undo
+			</button>
+			<button @click={redo} ?disabled={step >= snapshots.length - 1} class='button'>
+				Redo
+			</button>
+		</div>
+		<div @click={handleCanvasClick} class='x-canvas'>
+			{#each snap as node}
+				<div
+					class='x-circle'
+					style={{ '--x': node.x + 'px', '--y': node.y + 'px', '--r': node.r + 'px' }}
+					@contextmenu={(ev) => handleCircleContextMenu(ev, node)}
+				/>
+			{/each}
+		</div>
+		<fieldset ?disabled={!resizing} class='x-fieldset'>
+			<input
+				type='range'
+				max={MAX_RADIUS}
+				.value={resizing ? resizing.r : 0}
+				@change={handleResizeChange}
+			/>
+
+			<span>
+				{resizing ? resizing.r : 0}px
+			</span>
+
+			<button @click={handleResizeDone} class='button'>
+				Done
+			</button>
+		</fieldset>
+	</div>
+</div>
+
+<style>
+	@import './base.module.css';
+
+	.x-canvas {
+		background: #ffffff;
+		height: 200px;
+		width: 400px;
+		border-radius: 3px;
+		border: 1px solid black;
+		margin-top: 8px;
+		position: relative;
+	}
+
+	.x-circle {
+		transform: translate(-50%, -50%);
+		height: var(--r);
+		width: var(--r);
+		border-radius: 50%;
+		border: 1px solid #000000;
+		position: absolute;
+		left: var(--x);
+		top: var(--y);
+	}
+	.x-circle:hover {
+		background-color: rgb(238 238 238);
+	}
+
+	.x-fieldset {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin: 8px 0 0;
+		padding: 0;
+		border: 0;
+	}
+	.x-fieldset input[type='range'] {
+		flex-grow: 1;
+	}
+</style>

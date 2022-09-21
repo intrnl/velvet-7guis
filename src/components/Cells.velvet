@@ -1,0 +1,15 @@
+<script>
+
+</script>
+
+<div class='window' style='width: 137px'>
+	<div class='window-title'>
+		<span>Cells</span>
+	</div>
+	<div class='window-content'>
+	</div>
+</div>
+
+<style>
+	@import './base.module.css';
+</style>

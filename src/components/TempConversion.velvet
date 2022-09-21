@@ -1,0 +1,74 @@
+<script>
+	import { batch } from '@intrnl/velvet';
+
+	function isNumeric (n) {
+		return !isNaN(parseFloat(n)) && isFinite(n);
+	}
+
+	function getBackground (mine, other) {
+		if (mine === '') {
+			return '';
+		}
+
+		if (!isNumeric(mine)) {
+			return 'coral';
+		}
+
+		if (!isNumeric(other)) {
+			return 'lightgray';
+		}
+
+		return '';
+	}
+
+	let celsius = '';
+	let fahrenheit = '';
+
+	let prevC = null;
+	let prevF = null;
+
+	$: {
+		if (prevF !== fahrenheit) {
+			prevF = fahrenheit;
+
+			if (isNumeric(fahrenheit)) {
+				const f = parseFloat(fahrenheit);
+				batch(() => celsius = prevC = Math.round((f - 32) * (5 / 9)).toString());
+			}
+		}
+	}
+
+	$: {
+		if (prevC !== celsius) {
+			prevC = celsius;
+
+			if (isNumeric(celsius)) {
+				const c = parseFloat(celsius)
+				batch(() => fahrenheit = prevF = Math.round(c * (9 / 5) + 32).toString());
+			}
+		}
+	}
+</script>
+
+<div class='window' style='width: 573px;'>
+	<div class='window-title'>
+		<span>Temperature Conversion</span>
+	</div>
+	<div class='window-content'>
+		<label>
+			<input :value={celsius} class='textfield' style={{ 'background': getBackground(celsius, fahrenheit) }} />
+			<span>Celsius</span>
+		</label>
+
+		<span>=</span>
+
+		<label>
+			<input :value={fahrenheit} class='textfield' style={{ 'background': getBackground(fahrenheit, celsius) }} />
+			<span>Fahrenheit</span>
+		</label>
+	</div>
+</div>
+
+<style>
+	@import './base.module.css';
+</style>

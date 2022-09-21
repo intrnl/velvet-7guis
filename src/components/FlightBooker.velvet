@@ -1,0 +1,81 @@
+<script>
+	import { format, parse } from 'date-fns';
+
+	const DATE_FORMAT = 'dd.MM.yyyy';
+
+	function getFormat (date) {
+		const parsed = parse(date, DATE_FORMAT, new Date());
+		return isNaN(parsed) ? null : parsed;
+	}
+
+	let type = 'one-way';
+
+	let start = format(Date.now(), DATE_FORMAT);
+	let end = start;
+
+	let bookable = false;
+
+	$: validStart = getFormat(start) !== null;
+	$: validEnd = getFormat(end) !== null;
+	$: disabledEnd = type !== 'return';
+
+	$: {
+		if (!validStart || !validEnd) {
+			bookable = false;
+		}
+		else if (type === 'return') {
+			bookable = getFormat(start) <= getFormat(end);
+		}
+		else {
+			bookable = true;
+		}
+	}
+
+	function handleBooking () {
+		switch (type) {
+			case 'one-way': return alert(`You have booked a one-way flight for ${start}`);
+			case 'return': return alert(`You have booked a return flight from ${start} to ${end}`);
+		}
+
+		alert('This should never be reached');
+	}
+</script>
+
+<div class='window' style='width: 229px'>
+	<div class='window-title'>
+		<span>Flight Booker</span>
+	</div>
+	<div class='window-content x-content'>
+		<select :value={type} class='select'>
+			<option value='one-way'>One-way flight</option>
+			<option value='return'>Return flight</option>
+		</select>
+
+		<input
+			:value={start}
+			title='Start date'
+			class='textfield'
+			style={{ 'background': validStart ? '' : 'coral' }}
+		/>
+		<input
+			:value={end}
+			?disabled={disabledEnd}
+			title='End date'
+			class='textfield'
+			style={{ 'background': validEnd ? '' : 'coral' }}
+		/>
+
+		<button @click={handleBooking} ?disabled={!bookable} class='button'>
+			Book
+		</button>
+	</div>
+</div>
+
+<style>
+	@import './base.module.css';
+
+	.x-content {
+		display: grid;
+		gap: 4px;
+	}
+</style>

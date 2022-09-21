@@ -1,0 +1,77 @@
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+button, input, textarea, select {
+	font: inherit;
+	line-height: inherit;
+}
+
+.window {
+	background-color: rgb(235 235 235);
+	color: rgb(77 73 77);
+	box-shadow: rgb(172 172 172 / 75%) 0px 4px 15px;
+	font-size: 14px;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid rgb(172 172 172);
+	border-radius: 6px;
+}
+
+.window-title {
+	background: linear-gradient(to bottom, rgb(235, 235, 235), rgb(213, 213, 213));
+	line-height: 20px;
+	text-align: center;
+	user-select: none;
+	padding: 4px;
+	border-top: 1px solid rgb(243 241 243);
+	border-bottom: 1px solid rgb(177 174 177);
+	border-radius: 6px 6px 0 0;
+}
+
+.window-content {
+	padding: 8px;
+}
+
+.button {
+	background: linear-gradient(to bottom, rgb(255 255 255) 0%, rgb(246 246 246) 30%, rgb(243 243 243) 45%, rgb(237 237 237) 60%, rgb(238 238 238) 100%);
+	box-shadow: rgb(0 0 0 / 20%) 0px 0px 1px;
+	padding: 2px 8px;
+	border: 1px solid rgb(156 156 156);
+	border-radius: 3px;
+}
+.button:active {
+	background: linear-gradient(to bottom, rgb(172 197 233) 0%, rgb(163 192 242) 18%, rgb(97 160 237) 39%, rgb(85 163 242) 70%, rgb(130 194 241) 91.72%, rgb(154 210 242) 100%);
+	box-shadow: rgb(0 0 0 / 65%) 0px 0px 1px;
+	border-color: rgb(112 94 187);
+}
+.button:disabled {
+	color: gray;
+	background: transparent;
+	opacity: 1;
+}
+
+.textfield {
+	background: #ffffff;
+	box-shadow: rgb(0 0 0 / 10%) 0px -1px 0px;
+	height: 30px;
+	margin: 0;
+	padding: 2px 8px;
+	border: 1px solid rgb(156 156 156);
+	border-radius: 3px;
+}
+.textfield:disabled {
+	color: gray;
+	background: transparent;
+	opacity: 1;
+}
+
+.select {
+	background: #ffffff;
+	box-shadow: rgb(0 0 0 / 10%) 0px -1px 0px;
+	height: 30px;
+	margin: 0;
+	padding: 2px 4px;
+	border: 1px solid rgb(156 156 156);
+	border-radius: 3px;
+}

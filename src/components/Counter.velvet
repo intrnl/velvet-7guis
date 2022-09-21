@@ -1,0 +1,31 @@
+<script>
+	let count = 0;
+
+	function increment () {
+		count++;
+	}
+</script>
+
+<div class='window' style='width: 137px'>
+	<div class='window-title'>
+		<span>Counter</span>
+	</div>
+	<div class='window-content'>
+		<span class='x-counter'>
+			{count}
+		</span>
+		<button class='button' @click={increment}>
+			Count
+		</button>
+	</div>
+</div>
+
+<style>
+	@import './base.module.css';
+
+	.x-counter {
+		display: inline-block;
+		width: 60px;
+		text-align: center;
+	}
+</style>

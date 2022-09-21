@@ -4,10 +4,12 @@ specifiers:
   '@intrnl/esbuild-plugin-velvet': ^0.5.3
   '@intrnl/velvet': ^0.4.11
   '@intrnl/velvet-compiler': ^0.7.2
+  date-fns: ^2.29.3
   esbuild: ^0.15.8
 
 dependencies:
   '@intrnl/velvet': 0.4.11
+  date-fns: 2.29.3
 
 devDependencies:
   '@intrnl/esbuild-plugin-velvet': 0.5.3_wlofesey2xmik3lxynwshwp2bu
@@ -83,6 +85,11 @@ packages:
     resolution: {integrity: sha512-sRpyiNrx2dEYIMmUXprS8nlpRg2Drs8m9ElX9vVEXaCB4XEAJhKfs7IcX0IwShjuOAjLR6wzIrgoptz1n19i1A==}
     hasBin: true
     dev: true
+
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /esbuild-android-64/0.15.8:
     resolution: {integrity: sha512-bVh8FIKOolF7/d4AMzt7xHlL0Ljr+mYKSHI39TJWDkybVWHdn6+4ODL3xZGHOxPpdRpitemXA1WwMKYBsw8dGw==}
