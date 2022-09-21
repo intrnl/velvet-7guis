@@ -63,6 +63,7 @@
 	@import './base.module.css';
 
 	.x-table {
+		width: -moz-available;
 		width: -webkit-fill-available;
 		width: fill-available;
 		border-spacing: 8px 0;

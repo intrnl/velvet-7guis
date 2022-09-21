@@ -119,6 +119,7 @@
 	}
 
 	.x-table {
+		width: -moz-available;
 		width: -webkit-fill-available;
 		width: fill-available;
 		border-spacing: 2px 8px;
@@ -131,6 +132,7 @@
 	}
 
 	.x-table .textfield {
+		width: -moz-available;
 		width: -webkit-fill-available;
 		width: fill-available;
 	}
