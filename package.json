@@ -1,0 +1,19 @@
+{
+	"private": true,
+	"type": "module",
+	"engines": {
+		"node": ">=16.0.0"
+	},
+	"scripts": {
+		"dev": "NODE_ENV=development node ./scripts/dev.js",
+		"build": "NODE_ENV=production node ./scripts/build.js"
+	},
+	"dependencies": {
+		"@intrnl/velvet": "^0.4.4"
+	},
+	"devDependencies": {
+		"@intrnl/esbuild-plugin-velvet": "^0.5.2",
+		"@intrnl/velvet-compiler": "^0.7.1",
+		"esbuild": "^0.15.7"
+	}
+}
