@@ -74,7 +74,7 @@
 		resizing = null;
 	}
 
-	function handleResizeDialogClose () {
+	function handleResizeConfirm () {
 		const index = snap.findIndex((item) => item === resizing);
 
 		batch(() => {
@@ -145,7 +145,7 @@
 	</div>
 </div>
 
-<dialog #ref={dialogRef} @close={handleResizeDialogClose} class='window x-dialog-window'>
+<dialog #ref={dialogRef} @close={handleResizeCancel} class='window x-dialog-window'>
 	<div class='window-title'>
 		<span>Adjust circle diameter</span>
 	</div>
@@ -161,14 +161,14 @@
 			@input={handleResizeChange}
 		/>
 
-		<form method='dialog' class='window-actions'>
-			<button type='button' @click={handleResizeCancel} class='button'>
+		<div class='window-actions'>
+			<button @click={handleResizeCancel} class='button'>
 				Cancel
 			</button>
-			<button type='submit' class='button'>
+			<button @click={handleResizeConfirm} class='button'>
 				Done
 			</button>
-		</form>
+		</div>
 	</div>
 </dialog>
 
