@@ -70,6 +70,10 @@
 		radius = ev.target.valueAsNumber;
 	}
 
+	function handleResizeCancel () {
+		resizing = null;
+	}
+
 	function handleResizeDialogClose () {
 		const index = snap.findIndex((item) => item === resizing);
 
@@ -158,7 +162,10 @@
 		/>
 
 		<form method='dialog' class='window-actions'>
-			<button class='button'>
+			<button type='button' @click={handleResizeCancel} class='button'>
+				Cancel
+			</button>
+			<button type='submit' class='button'>
 				Done
 			</button>
 		</form>
