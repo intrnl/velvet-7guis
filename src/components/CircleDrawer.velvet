@@ -8,26 +8,41 @@
 	let step = 0;
 
 	let resizing = null;
+	let radius = 0;
+
+	let dialogRef = null;
 
 	$: snap = snapshots[step];
 
+	$: {
+		if (dialogRef) {
+			if (resizing) {
+				dialogRef.showModal();
+			}
+			else if (dialogRef.open) {
+				dialogRef.close();
+			}
+		}
+	}
+
 	function undo () {
-		resizing = null;
+		if (resizing) {
+			return;
+		}
+
 		step = Math.max(step - 1, 0);
 	}
 
 	function redo () {
-		resizing = null;
+		if (resizing) {
+			return;
+		}
+
 		step = Math.min(step + 1, snapshots.length - 1);
 	}
 
 	function handleCanvasClick (ev) {
-		if (ev.target !== ev.currentTarget) {
-			return;
-		}
-
-		if (resizing) {
-			resizing = null;
+		if (resizing || ev.target !== ev.currentTarget) {
 			return;
 		}
 
@@ -38,9 +53,13 @@
 		addSnapshot(next);
 	}
 
-	function handleCircleContextMenu (ev, node) {
+	function handleCircleContextMenu (node, ev) {
 		ev.preventDefault();
-		resizing = node;
+
+		batch(() => {
+			resizing = node;
+			radius = node.r;
+		});
 	}
 
 	function handleResizeChange (ev) {
@@ -48,21 +67,23 @@
 			return;
 		}
 
-		const index = snap.findIndex((item) => item === resizing);
-
-		if (index !== -1) {
-			batch(() => {
-				const next = { ...resizing, r: ev.target.valueAsNumber };
-				const array = snap.slice();
-
-				resizing = array[index] = next;
-				addSnapshot(array);
-			});
-		}
+		radius = ev.target.valueAsNumber;
 	}
 
-	function handleResizeDone () {
-		resizing = null;
+	function handleResizeDialogClose () {
+		const index = snap.findIndex((item) => item === resizing);
+
+		batch(() => {
+			if (index !== -1 && resizing.r !== radius) {
+				const next = { ...resizing, r: radius };
+				const array = snap.slice();
+
+				array[index] = next;
+				addSnapshot(array);
+			}
+
+			resizing = null;
+		});
 	}
 
 	function addSnapshot (snap) {
@@ -89,36 +110,77 @@
 				Redo
 			</button>
 		</div>
+
+		<!-- It's much much more easier to just fake a circle when resizing -->
 		<div @click={handleCanvasClick} class='x-canvas'>
 			{#each snap as node}
 				<div
 					class='x-circle'
-					style={{ '--x': node.x + 'px', '--y': node.y + 'px', '--r': node.r + 'px' }}
-					@contextmenu={(ev) => handleCircleContextMenu(ev, node)}
+					style={{
+						'--x': node.x + 'px',
+						'--y': node.y + 'px',
+						'--r': node.r + 'px',
+						'--d': resizing === node ? 'none' : 'block',
+					}}
+					@contextmenu={(ev) => handleCircleContextMenu(node, ev)}
 				/>
 			{/each}
+
+			{#if resizing}
+				<div
+					class='x-circle'
+					style={{
+						'--x': resizing?.x + 'px',
+						'--y': resizing?.y + 'px',
+						'--r': radius + 'px',
+						'--d': 'block',
+					}}
+				/>
+			{/if}
 		</div>
-		<fieldset ?disabled={!resizing} class='x-fieldset'>
-			<input
-				type='range'
-				max={MAX_RADIUS}
-				.value={resizing ? resizing.r : 0}
-				@change={handleResizeChange}
-			/>
-
-			<span>
-				{resizing ? resizing.r : 0}px
-			</span>
-
-			<button @click={handleResizeDone} class='button'>
-				Done
-			</button>
-		</fieldset>
 	</div>
 </div>
 
+<dialog #ref={dialogRef} @close={handleResizeDialogClose} class='window x-dialog-window'>
+	<div class='window-title'>
+		<span>Adjust circle diameter</span>
+	</div>
+
+	<div class='window-content'>
+		<p class='x-dialog-text'>
+			Adjust diameter of circle at ({resizing?.x}, {resizing?.y})
+		</p>
+		<input
+			type='range'
+			max={MAX_RADIUS}
+			.value={radius}
+			@input={handleResizeChange}
+		/>
+
+		<form method='dialog' class='window-actions'>
+			<button class='button'>
+				Done
+			</button>
+		</form>
+	</div>
+</dialog>
+
 <style>
 	@import './base.module.css';
+
+	.x-dialog-window {
+		padding: 0;
+	}
+	.x-dialog-window:not([open]) {
+		display: none;
+	}
+	.x-dialog-text {
+		margin: 0 0 8px;
+	}
+	.x-dialog-window input[type='range'] {
+		width: 100%;
+		margin: 0;
+	}
 
 	.x-canvas {
 		background: #ffffff;
@@ -133,6 +195,7 @@
 
 	.x-circle {
 		transform: translate(-50%, -50%);
+		display: var(--d);
 		height: var(--r);
 		width: var(--r);
 		border-radius: 50%;
@@ -144,17 +207,5 @@
 	.x-circle:hover {
 		background-color: rgb(238 238 238);
 		z-index: 2;
-	}
-
-	.x-fieldset {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		margin: 8px 0 0;
-		padding: 0;
-		border: 0;
-	}
-	.x-fieldset input[type='range'] {
-		flex-grow: 1;
 	}
 </style>

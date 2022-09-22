@@ -33,6 +33,13 @@ button, input, textarea, select {
 	padding: 8px;
 }
 
+.window-actions {
+	display: flex;
+	justify-content: end;
+	gap: 8px;
+	margin: 8px 0 0;
+}
+
 .button {
 	background: linear-gradient(to bottom, rgb(255 255 255) 0%, rgb(246 246 246) 30%, rgb(243 243 243) 45%, rgb(237 237 237) 60%, rgb(238 238 238) 100%);
 	box-shadow: rgb(0 0 0 / 20%) 0px 0px 1px;
