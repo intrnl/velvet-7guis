@@ -106,7 +106,7 @@
 		<span>Circle Drawer</span>
 	</div>
 	<div class='window-content'>
-		<div>
+		<div class='actions'>
 			<button @click={undo} ?disabled={step < 1} class='button'>
 				Undo
 			</button>
@@ -214,5 +214,10 @@
 	.x-circle:hover {
 		background-color: rgb(238 238 238);
 		z-index: 2;
+	}
+
+	.actions {
+		display: flex;
+		gap: 4px;
 	}
 </style>

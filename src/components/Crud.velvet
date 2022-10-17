@@ -83,7 +83,7 @@
 				</tr>
 			</table>
 		</div>
-		<div>
+		<div class='actions'>
 			<button @click={handleAdd} ?disabled={!valid} class='button'>
 				Add
 			</button>
@@ -135,5 +135,10 @@
 		width: -moz-available;
 		width: -webkit-fill-available;
 		width: fill-available;
+	}
+
+	.actions {
+		display: flex;
+		gap: 4px;
 	}
 </style>

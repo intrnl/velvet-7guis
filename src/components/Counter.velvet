@@ -10,14 +10,14 @@
 	<div class='window-title'>
 		<span>Counter</span>
 	</div>
-	<div class='window-content'>
+	<span class='window-content'>
 		<span class='x-counter'>
 			{count}
 		</span>
 		<button class='button' @click={increment}>
 			Count
 		</button>
-	</div>
+	</span>
 </div>
 
 <style>
