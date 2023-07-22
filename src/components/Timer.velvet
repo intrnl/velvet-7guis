@@ -37,14 +37,16 @@
 	</div>
 	<div class='window-content'>
 		<table class='x-table'>
-			<tr>
-				<th>Elapsed time:</th>
-				<td><progress max={max} value={elapsed} /></td>
-			</tr>
-			<tr>
-				<th>Duration:</th>
-				<td><input type='range' min={1} max={MAX} :value={max} /></td>
-			</tr>
+			<tbody>
+				<tr>
+					<th>Elapsed time:</th>
+					<td><progress max={max} value={elapsed} /></td>
+				</tr>
+				<tr>
+					<th>Duration:</th>
+					<td><input type='range' min={1} max={MAX} :value={max} /></td>
+				</tr>
+			</tbody>
 		</table>
 
 		<div class='x-footer'>

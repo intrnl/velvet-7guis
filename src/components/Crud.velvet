@@ -73,14 +73,16 @@
 				{/each}
 			</select>
 			<table class='x-table'>
-				<tr>
-					<th>Name:</th>
-					<td><input :value={name} class='textfield' /></td>
-				</tr>
-				<tr>
-					<th>Surname:</th>
-					<td><input :value={surname} class='textfield' /></td>
-				</tr>
+				<tbody>
+					<tr>
+						<th>Name:</th>
+						<td><input :value={name} class='textfield' /></td>
+					</tr>
+					<tr>
+						<th>Surname:</th>
+						<td><input :value={surname} class='textfield' /></td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 		<div class='actions'>
