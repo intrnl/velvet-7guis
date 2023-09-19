@@ -5,17 +5,17 @@
 		"node": ">=16.0.0"
 	},
 	"scripts": {
-		"dev": "NODE_ENV=development bun ./scripts/dev.js",
-		"build": "NODE_ENV=production bun ./scripts/build.js",
-		"publish": "rm -r dist/_assets; bun run build; scripts/publish.sh"
+		"dev": "NODE_ENV=development node ./scripts/dev.js",
+		"build": "NODE_ENV=production node ./scripts/build.js",
+		"publish": "rm -r dist/_assets; pnpm run build; scripts/publish.sh"
 	},
 	"dependencies": {
-		"@intrnl/velvet": "^1.0.0",
-		"date-fns": "^2.29.3"
+		"@intrnl/velvet": "^1.1.0",
+		"date-fns": "^2.30.0"
 	},
 	"devDependencies": {
 		"@intrnl/esbuild-plugin-velvet": "^1.0.2",
-		"@intrnl/velvet-compiler": "^1.0.1",
-		"esbuild": "^0.18.15"
+		"@intrnl/velvet-compiler": "^1.1.0",
+		"esbuild": "^0.19.3"
 	}
 }
